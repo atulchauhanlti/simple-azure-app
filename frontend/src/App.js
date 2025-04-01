@@ -12,8 +12,6 @@ function App() {
     }
   };
 
-  
-
   return (
     <div style={{ textAlign: 'center', padding: '50px' }}>
       <h1>Welcome to My Simple App</h1>
