@@ -3,6 +3,7 @@ import axios from 'axios';
 
 function App() {
   const fetchApi = async () => {
+    
     try {
       const response = await axios.get('http://localhost:5000/api/data'); 
       console.log(response.data); 
