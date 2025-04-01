@@ -29,15 +29,16 @@ jobs:
           npm run build --if-present
           cd ..
 
-      # Install and prepare backend
-      - name: Install backend dependencies
+      # Skip installing node_modules in backend
+      - name: Prepare backend for deployment
         run: |
           cd backend
-          npm install
+          rm -rf node_modules # Ensure no node_modules is included
           cd ..
 
+      # Zip only necessary files for deployment
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip release.zip . -r -x "node_modules/*" -x "frontend/node_modules/*" -x "backend/node_modules/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -70,6 +71,11 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_206CC28949654D498ABCFD31BA7A9437 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E9D705123D4C4BC7867DEBD021F2F73D }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EC849102869A4FC18C6E86A58CDE3EB4 }}
+
+      - name: Install dependencies on Azure server
+        run: |
+          cd backend
+          npm install # Install backend dependencies after deployment
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
