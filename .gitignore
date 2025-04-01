@@ -1,0 +1,22 @@
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Optional: Ignore build folder for React frontend
+build/
+
+# Optional: Ignore DS_Store files for macOS users
+.DS_Store
+
+# Optional: Ignore VS Code settings folder
+.vscode/
+
+# Optional: Ignore IDE-related files
+.idea/
