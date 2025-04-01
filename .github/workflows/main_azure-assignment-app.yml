@@ -26,14 +26,15 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run build --if-present
+          npm run build
+          mv build ../build # Move build folder to root directory
           cd ..
 
-      # Skip installing node_modules in backend
+      # Prepare backend for deployment
       - name: Prepare backend for deployment
         run: |
           cd backend
-          rm -rf node_modules # Ensure no node_modules is included
+          rm -rf node_modules # Ensure node_modules is excluded
           cd ..
 
       # Zip only necessary files for deployment
@@ -64,7 +65,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -72,15 +73,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E9D705123D4C4BC7867DEBD021F2F73D }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EC849102869A4FC18C6E86A58CDE3EB4 }}
 
-      - name: Install dependencies on Azure server
-        run: |
-          cd backend
-          npm install # Install backend dependencies after deployment
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'azure-assignment-app'
           slot-name: 'Production'
-          package: .
+          package: ./build # Deploy only the build folder

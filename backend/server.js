@@ -2,6 +2,7 @@ const express = require('express');
 const { CosmosClient } = require('@azure/cosmos');
 require('dotenv').config(); // Load environment variables
 const cors = require('cors');
+const path = require('path'); // Required to serve frontend static files
 
 const app = express();
 app.use(cors());
@@ -25,6 +26,14 @@ async function setupDatabase() {
   }
 }
 setupDatabase();
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend/build'))); // Adjust path as needed
+
+// Catch-all route to serve index.html for SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+});
 
 // API endpoint to test
 app.get('/api', (req, res) => {
