@@ -13,9 +13,10 @@ const port = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '../wwwroot')));
 
 // Catch-all route to serve index.html for SPA routing
-app.get('*', (req, res) => {
+app.get(/(.*)/, (req, res) => {
   res.sendFile(path.join(__dirname, '../wwwroot/index.html'));
 });
+
 
 // Cosmos DB connection setup
 const COSMOS_CONNECTION_STRING = process.env.COSMOS_CONNECTION_STRING;
